@@ -1,29 +1,25 @@
 import urllib.request
 from os.path import basename
 from urllib.parse import urlsplit
-from bs4 import BeautifulSoup # for HTML parsing
+from bs4 import BeautifulSoup
 
 global urlList
 urlList = []
 
-# recursively download images starting from the root URL
 def downloadImages(url, level): # the root URL is level 0
     print(url)
     global urlList
-    if url in urlList: # prevent using the same URL again
+    if url in urlList: 
         return
     urlList.append(url)
     try:
         request = urllib.request.Request(url)
         request.add_header('User-Agent', 'Mozilla/5.0')
-        request.add_header('Content-type', 'text/xml; charset="utf-8"')
         urlContent = urllib.request.urlopen(request).read()
     except Exception as e:
         raise e;
 
-    print("continue")
     soup = BeautifulSoup(urlContent)
-    # find and download all images
     imgTags = soup.findAll('img')
     for imgTag in imgTags:
         imgUrl = imgTag['src']
@@ -33,7 +29,7 @@ def downloadImages(url, level): # the root URL is level 0
             requestImg.add_header('User-Agent', 'Mozilla/5.0')
             imgData = urllib.request.urlopen(requestImg).read()
             fileName = basename(urlsplit(imgUrl)[2])
-            output = open(fileName,'wb')
+            output = open("images/"+fileName,'wb')
             output.write(imgData)
             output.close()
         except Exception as e:
@@ -50,5 +46,4 @@ def downloadImages(url, level): # the root URL is level 0
                 except:
                     pass
 
-# main
 downloadImages('https://www.bbbuy.mx', 0)
