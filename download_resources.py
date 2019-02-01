@@ -19,7 +19,7 @@ def downloadImages(url=None, level=0): # the root URL is level 0
             urlContent = urllib.request.urlopen(request).read()
         except Exception as e:
             raise e;
-        soup = BeautifulSoup(urlContent)
+        soup = BeautifulSoup(urlContent, "html.parser")
     else:
         soup = BeautifulSoup(open("html_sites/bbbuy.html"), "html.parser")
 
