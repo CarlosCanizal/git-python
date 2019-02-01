@@ -6,20 +6,25 @@ from bs4 import BeautifulSoup
 global urlList
 urlList = []
 
-def downloadImages(url, level): # the root URL is level 0
-    print(url)
-    global urlList
-    if url in urlList: 
-        return
-    urlList.append(url)
-    try:
-        request = urllib.request.Request(url)
-        request.add_header('User-Agent', 'Mozilla/5.0')
-        urlContent = urllib.request.urlopen(request).read()
-    except Exception as e:
-        raise e;
+def downloadImages(url=None, level=0): # the root URL is level 0
+    if url:
+        print(url)
+        global urlList
+        if url in urlList: 
+            return
+        urlList.append(url)
+        try:
+            request = urllib.request.Request(url)
+            request.add_header('User-Agent', 'Mozilla/5.0')
+            urlContent = urllib.request.urlopen(request).read()
+        except Exception as e:
+            raise e;
+        soup = BeautifulSoup(urlContent)
+    else:
+        soup = BeautifulSoup(open("html_sites/bbbuy.html"), "html.parser")
 
-    soup = BeautifulSoup(urlContent)
+
+    # soup = BeautifulSoup(urlContent)
     imgTags = soup.findAll('img')
     for imgTag in imgTags:
         imgUrl = imgTag['src']
@@ -46,4 +51,4 @@ def downloadImages(url, level): # the root URL is level 0
                 except:
                     pass
 
-downloadImages('https://www.bbbuy.mx', 0)
+downloadImages()
